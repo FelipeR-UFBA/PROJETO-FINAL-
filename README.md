@@ -87,7 +87,7 @@ O dashboard estará acessível em `http://localhost:5173`.
 
 ---
 
-## 📁 Estrutura de Arquivos
+##  Estrutura de Arquivos
 
 ```
 federated-ids-showcase/
@@ -102,5 +102,5 @@ federated-ids-showcase/
 └── README.md            # Este arquivo
 ```
 
-## 🧪 Notas sobre o Dataset
+##  Notas sobre o Dataset
 O projeto foi ajustado para usar o **NSL-KDD**. Certifique-se de que os arquivos `KDDTrain+.txt` e `KDDTest+.txt` estejam acessíveis e íntegros. O pré-processamento (One-Hot Encoding, Scaling) é feito automaticamente pelo módulo `backend.ml.data`.
