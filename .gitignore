@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Javascript / React
+node_modules/
+dist/
+.DS_Store
+
+# Project Specific
+backend.log
+*.log
+backend/model_checkpoints/
+experiment_backups/
+metrics_*.json
+
+# Dataset (Safety check, though typically standard is to keep it outside)
+# nsl-kdd/
+
+# IDE
+.vscode/
+.idea/
