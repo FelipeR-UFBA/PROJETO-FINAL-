@@ -17,7 +17,6 @@ backend/model_checkpoints/
 experiment_backups/
 metrics_*.json
 
-# Dataset (Safety check, though typically standard is to keep it outside)
 # nsl-kdd/
 
 # IDE

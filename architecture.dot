@@ -1,0 +1,99 @@
+digraph Architecture {
+    rankdir=TB;
+    splines=ortho; // Restoring ortho but with manual spacing
+    nodesep=1.5;   // Huge horizontal separation
+    ranksep=1.2;   // Huge vertical separation
+    fontname="Arial";
+    label="Arquitetura do Sistema Federated IDS";
+    fontsize=24;
+    labelloc="t";
+
+    // Global Styles
+    node [shape=rect, style="filled,rounded", fontname="Arial", fontsize=12, margin="0.3,0.1", height=0.6, fixedsize=false];
+    edge [fontname="Arial", fontsize=10, penwidth=1.2];
+
+    // --- INTERFACE ---
+    subgraph cluster_0 {
+        label = "INTERFACE";
+        bgcolor="#e7f5ff";
+        color="#74c0fc";
+        
+        Admin [shape=ellipse, label="Admin", fillcolor="white", color="#1c7ed6"];
+        Dashboard [label="Dashboard Web", shape=note, fillcolor="white", color="#1c7ed6"];
+        
+        {rank=same; Admin; Dashboard}
+    }
+
+    // --- AGENTS ---
+    subgraph cluster_1 {
+        label = "AGENTS (Backend)";
+        bgcolor="#f8f9fa";
+        color="#adb5bd";
+        
+        subgraph cluster_mid {
+            label = "Middleware";
+            style=dashed;
+            bgcolor="white";
+            XMPP [label="XMPP Server\n(Prosody)", shape=component];
+        }
+
+        subgraph cluster_sma {
+            label = "Sistema Multi-Agentes";
+            bgcolor="white";
+            
+            ServerAgent [label="Server Agent\n(Orchestrator)", shape=box3d, fillcolor="#fff9db"];
+            
+            subgraph cluster_cli {
+                label=""; style=invis;
+                ClientA [label="Client Agent A", shape=box3d];
+                ClientB [label="Client Agent B", shape=box3d];
+            }
+        }
+    }
+
+    // --- INFRA ---
+    subgraph cluster_2 {
+        label = "INFRASTRUCTURE";
+        bgcolor="#ebfbee";
+        color="#40c057";
+        
+        GlobalModel [label="Global Model", shape=cylinder, fillcolor="white"];
+        DatasetA [label="Dataset A", shape=cylinder, fillcolor="white"];
+        DatasetB [label="Dataset B", shape=cylinder, fillcolor="white"];
+        GPU [label="GPU (CUDA)", shape=note, fillcolor="white"];
+    }
+
+    // --- CONNECTIONS (WITH PORTS to avoid overlap) ---
+
+    // Interface -> Server
+    // Enter Server from Top
+    Dashboard:s -> ServerAgent:n [label="API", color="#1c7ed6"];
+    Admin:e -> Dashboard:w [label="Access"];
+
+    // Server -> XMPP
+    // Side by side connection
+    ServerAgent:e -> XMPP:w [dir=both, label="Pub/Sub", constraint=false, minlen=2];
+    
+    // XMPP -> Clients (Control)
+    // Long way around or direct
+    edge [style=dashed, color="#868e96"];
+    XMPP:s -> ClientA:ne [label="Notify"];
+    XMPP:s -> ClientB:ne [label="Notify"];
+
+    // Server -> Clients (Flower - Main Data)
+    edge [style=solid, color="#e67700", penwidth=2.5];
+    ServerAgent:sw -> ClientA:n [label="gRPC"];
+    ServerAgent:se -> ClientB:n [label="gRPC"];
+
+    // Agents -> Data
+    edge [style=solid, color="black", penwidth=1];
+    ServerAgent:w -> GlobalModel:n [label="Save"];
+    
+    ClientA:s -> DatasetA:n [label="Train"];
+    ClientB:s -> DatasetB:n [label="Train"];
+
+    // Hardware
+    edge [style=dotted];
+    ClientA:sw -> GPU:n;
+    ClientB:se -> GPU:n;
+}
